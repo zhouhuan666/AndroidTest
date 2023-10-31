@@ -28,6 +28,9 @@
             android:exported="true">
 
         </activity>
+        <activity android:name=".rxjava.RxjavaActivity">
+
+        </activity>
     </application>
 
 </manifest>

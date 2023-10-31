@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
+import com.gdet.testapp.rxjava.RxjavaActivity;
 import com.gdet.testapp.widget.MainRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.rv);
         list.add("GestureDetector");
+        list.add("RxJava");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onItemClick: position " + position);
                 if (position == 0) {
                     startActivity(new Intent(MainActivity.this, GestureDetectorActivity.class));
+                } else if (position == 1) {
+                    startActivity(new Intent(MainActivity.this, RxjavaActivity.class));
                 }
             }
         });
