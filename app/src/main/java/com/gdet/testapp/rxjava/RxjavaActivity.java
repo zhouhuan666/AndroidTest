@@ -10,6 +10,7 @@ import com.gdet.testapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -34,7 +35,7 @@ public class RxjavaActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rxjava);
-        initBuffer();
+        mergeArray();
     }
 
     void initMap() {
@@ -130,6 +131,114 @@ public class RxjavaActivity extends AppCompatActivity {
                 Log.e(TAG, "onComplete: ");
             }
         });
+    }
+
+    void concat() {
+        Observable.concat(Observable.just(1, 2), Observable.just(3, 4),
+                Observable.just(5, 6), Observable.just(7, 8)).subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "onSubscribe: " + d);
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.e(TAG, "onNext: " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: " + e);
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "onComplete: ");
+            }
+        });
+    }
+
+    void concatArray() {
+        Observable.concatArray(Observable.just("一", "二"), Observable.just("三", "四"),
+                Observable.just("五", "六"), Observable.just("七", "八")).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "onSubscribe: " + d);
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.e(TAG, "onNext: " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: " + e);
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "onComplete: ");
+            }
+        });
+    }
+
+    void mergeArray() {
+        Observable<Long> observable1 = Observable.
+                intervalRange(1, 3, 1, 1, TimeUnit.SECONDS);
+        Observable observable2 = Observable.
+                intervalRange(10, 3, 1, 1, TimeUnit.SECONDS);
+        Observable.merge(observable1, observable2).subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "onSubscribe: " + d);
+            }
+
+            @Override
+            public void onNext(Object o) {
+                Log.e(TAG, "onNext: " + o);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: " + e);
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "onComplete: ");
+            }
+        });
+
+    }
+
+    void startWith() {
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("Array:1");
+        Observable.just("一", "二", "三", "四").
+                startWith(strings).startWith("startWith:2").startWithArray("startWithArray:3", "startWithArray:4").
+                subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.e(TAG, "onSubscribe: " + d);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.e(TAG, "onNext: " + s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.e(TAG, "onComplete: ");
+                    }
+                });
+
     }
 
 }
