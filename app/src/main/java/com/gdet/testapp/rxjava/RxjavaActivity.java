@@ -10,6 +10,7 @@ import com.gdet.testapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -18,6 +19,8 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiConsumer;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -35,7 +38,7 @@ public class RxjavaActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rxjava);
-        mergeArray();
+        count();
     }
 
     void initMap() {
@@ -240,5 +243,84 @@ public class RxjavaActivity extends AppCompatActivity {
                 });
 
     }
+
+    void zip() {
+        Log.e(TAG, "zip: " + "  " + Thread.currentThread().getName());
+        Observable<Integer> observable1 = Observable.just(1, 2, 3, 4);
+        Observable<String> observable2 = Observable.just("A", "B", "C");
+        Observable.zip(observable1, observable2, new BiFunction<Integer, String, String>() {
+            @Override
+            public String apply(Integer integer, String s) throws Exception {
+                return integer + s;
+            }
+        }).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "onSubscribe: " + d + "  " + Thread.currentThread().getName());
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.e(TAG, "onNext: " + s + "  " + Thread.currentThread().getName());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: " + "  " + Thread.currentThread().getName());
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "onComplete: " + "  " + Thread.currentThread().getName());
+            }
+        });
+
+    }
+
+    void reduce() {
+        Observable.just(1, 2, 3, 4, 5).reduce(new BiFunction<Integer, Integer, Integer>() {
+            @Override
+            public Integer apply(Integer integer, Integer integer2) throws Exception {
+                Log.e(TAG, "reduce：accept 计算结果== " + integer + "*" + integer2);
+                return integer * integer2;
+            }
+        }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.e(TAG, "accept: " + integer);
+            }
+        });
+    }
+
+    void collect() {
+        Observable.just(1, 2, 3, 4, 5).collect(new Callable<ArrayList<Integer>>() {
+            @Override
+            public ArrayList<Integer> call() throws Exception {
+                return new ArrayList<>();
+            }
+        }, new BiConsumer<ArrayList<Integer>, Integer>() {
+            @Override
+            public void accept(ArrayList<Integer> integers, Integer integer) throws Exception {
+                Log.e(TAG, "reduce：collect 加入容器的数据== " + integer);
+                integers.add(integer);
+            }
+        }).subscribe(new Consumer<ArrayList<Integer>>() {
+            @Override
+            public void accept(ArrayList<Integer> integers) throws Exception {
+                Log.e(TAG, "reduce：collect 最后结果== " + integers);
+            }
+        });
+    }
+
+
+    void count() {
+        Observable.just(1, 2, 3, 4, 5).count().subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                Log.e(TAG, "accept: " + aLong);
+            }
+        });
+    }
+
 
 }
