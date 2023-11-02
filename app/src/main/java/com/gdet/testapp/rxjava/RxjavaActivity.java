@@ -40,7 +40,7 @@ public class RxjavaActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rxjava);
-        subscribeAndComplete();
+        onErrorResumeNext();
     }
 
     void initMap() {
@@ -484,5 +484,85 @@ public class RxjavaActivity extends AppCompatActivity {
         });
     }
 
+    void onErrorReturn() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                        for (int i = 0; i < 10; i++) {
+                            if (i == 5) {//i==5抛出异常
+                                emitter.onError(new Exception("抛出异常"));
+                            }
+                            emitter.onNext(i);
+                        }
+
+                    }
+                })
+                .onErrorReturn(new Function<Throwable, Integer>() {
+                    @Override
+                    public Integer apply(Throwable throwable) throws Exception {
+                        return 404;
+                    }
+                })
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.e(TAG, "onSubscribe: " + d);
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        Log.e(TAG, "onNext: " + integer);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.e(TAG, "onComplete: ");
+                    }
+                });
+    }
+
+    void onErrorResumeNext() {
+        Observable.create(new ObservableOnSubscribe<String>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                        emitter.onNext("一");
+                        emitter.onNext("二");
+                        emitter.onError(new Exception("抛出异常"));
+                    }
+                })
+                .onErrorResumeNext(new Function<Throwable, ObservableSource<? extends String>>() {
+                    @Override
+                    public ObservableSource<? extends String> apply(Throwable throwable) throws Exception {
+                        return Observable.just("404", "405", "406");
+                    }
+                })
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.e(TAG, "onSubscribe: ");
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.e(TAG, "onNext: " + s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.e(TAG, "onComplete: ");
+                    }
+                });
+
+    }
 
 }
