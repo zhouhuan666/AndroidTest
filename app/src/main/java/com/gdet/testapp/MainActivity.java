@@ -15,6 +15,7 @@ import com.gdet.annotations.BindView;
 import com.gdet.testapp.annotation.HuanButterKnife;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
 import com.gdet.testapp.rxjava.RxjavaActivity;
+import com.gdet.testapp.touchevent.TouchEventActivity;
 import com.gdet.testapp.widget.MainRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv);
         list.add("GestureDetector");
         list.add("RxJava");
+        list.add("TouchEvent");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -59,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, GestureDetectorActivity.class));
                 } else if (position == 1) {
                     startActivity(new Intent(MainActivity.this, RxjavaActivity.class));
+                } else if (position == 2) {
+                    startActivity(new Intent(MainActivity.this, TouchEventActivity.class));
                 }
             }
         });

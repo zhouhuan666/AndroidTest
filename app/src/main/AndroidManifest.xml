@@ -31,6 +31,9 @@
         <activity android:name=".rxjava.RxjavaActivity">
 
         </activity>
+        <activity android:name=".touchevent.TouchEventActivity">
+
+        </activity>
     </application>
 
 </manifest>
