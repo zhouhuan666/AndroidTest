@@ -11,9 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gdet.annotations.BindView;
 import com.gdet.testapp.annotation.HuanButterKnife;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
+import com.gdet.testapp.kotlin.coroutine.CoroutineActivity;
+import com.gdet.testapp.kotlin.coroutine.OkHttpActivity;
 import com.gdet.testapp.rxjava.RxjavaActivity;
 import com.gdet.testapp.touchevent.TouchEventActivity;
 import com.gdet.testapp.widget.MainRecyclerViewAdapter;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         list.add("GestureDetector");
         list.add("RxJava");
         list.add("TouchEvent");
+        list.add("Coroutine");
+        list.add("Coroutine-OKHttp");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -63,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, RxjavaActivity.class));
                 } else if (position == 2) {
                     startActivity(new Intent(MainActivity.this, TouchEventActivity.class));
+                } else if (position == 3) {
+                    startActivity(new Intent(MainActivity.this, CoroutineActivity.class));
+                }else if (position == 4) {
+                    startActivity(new Intent(MainActivity.this, OkHttpActivity.class));
                 }
             }
         });
