@@ -2,6 +2,7 @@ package com.gdet.testapp.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,8 @@ import java.util.List;
  * 创建日期：2023-10-07
  * 描述：
  */
-public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.MainViewHolder> {
+public class  MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.MainViewHolder> {
+    private static final String TAG = "MainRecyclerViewAdapter";
 
     private Context context;
 
@@ -47,12 +49,14 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "onCreateViewHolder: ");
         inflater = LayoutInflater.from(context).inflate(R.layout.item_main, parent, false);
         return new MainViewHolder(inflater);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Log.d(TAG, "onBindViewHolder:  "+list.get(position)+"  "+position);
         holder.button.setText(list.get(position));
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override

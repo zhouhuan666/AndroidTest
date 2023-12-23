@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gdet.testapp.annotation.HuanButterKnife;
+import com.gdet.testapp.customctrlres.cp1.CustomCtrlResOneActivity;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
 import com.gdet.testapp.kotlin.coroutine.CoroutineActivity;
 import com.gdet.testapp.kotlin.coroutine.OkHttpActivity;
@@ -53,13 +55,14 @@ public class MainActivity extends AppCompatActivity {
         list.add("TouchEvent");
         list.add("Coroutine");
         list.add("Coroutine-OKHttp");
+        list.add("CustomCtrlResOne");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
         mainRecyclerViewAdapter.setOnItemClickListener(new MainRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Log.d(TAG, "onItemClick: position " + position);
+                Log.d(TAG, "onItemClick: position " +((Button)view).getText()+ position);
                 if (position == 0) {
                     startActivity(new Intent(MainActivity.this, GestureDetectorActivity.class));
                 } else if (position == 1) {
@@ -70,10 +73,23 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, CoroutineActivity.class));
                 }else if (position == 4) {
                     startActivity(new Intent(MainActivity.this, OkHttpActivity.class));
+                }else if (position == 5) {
+                    startActivity(new Intent(MainActivity.this, CustomCtrlResOneActivity.class));
                 }
             }
         });
+
         recyclerView.setAdapter(mainRecyclerViewAdapter);
+
+        Button button1=findViewById(R.id.bt1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list.clear();
+                list.add("asdfsadfsadfasdfasdf");
+                mainRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
 
 
     }

@@ -19,3 +19,4 @@ include ':app'
 
 include ':annotations'
 include ':annotation_processor'
+include ':basicsample'
