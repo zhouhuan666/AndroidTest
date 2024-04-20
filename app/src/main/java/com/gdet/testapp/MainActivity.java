@@ -17,6 +17,7 @@ import com.gdet.testapp.customctrlres.cp1.CustomCtrlResOneActivity;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
 import com.gdet.testapp.kotlin.coroutine.CoroutineActivity;
 import com.gdet.testapp.kotlin.coroutine.OkHttpActivity;
+import com.gdet.testapp.retrofit.RetrofitActivity;
 import com.gdet.testapp.rxjava.RxjavaActivity;
 import com.gdet.testapp.touchevent.TouchEventActivity;
 import com.gdet.testapp.widget.MainRecyclerViewAdapter;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        HuanButterKnife.bind(this);
+//        HuanButterKnife.bind(this);
         recyclerView = findViewById(R.id.rv);
         list.add("GestureDetector");
         list.add("RxJava");
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("Coroutine");
         list.add("Coroutine-OKHttp");
         list.add("CustomCtrlResOne");
+        list.add("Retrofit");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, OkHttpActivity.class));
                 }else if (position == 5) {
                     startActivity(new Intent(MainActivity.this, CustomCtrlResOneActivity.class));
+                }else if (position ==6) {
+                    startActivity(new Intent(MainActivity.this, RetrofitActivity.class));
                 }
             }
         });

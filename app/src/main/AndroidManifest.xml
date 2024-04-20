@@ -47,6 +47,9 @@
         <activity android:name=".customctrlres.cp1.CustomCtrlResOneActivity">
 
         </activity>
+        <activity android:name=".retrofit.RetrofitActivity">
+
+        </activity>
     </application>
 
 </manifest>
