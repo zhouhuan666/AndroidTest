@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gdet.testapp.annotation.HuanButterKnife;
 import com.gdet.testapp.customctrlres.cp1.CustomCtrlResOneActivity;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
+import com.gdet.testapp.jetpack.lifecycle.LifecycleActivity;
+import com.gdet.testapp.jetpack.livedata.LiveDataActivity;
 import com.gdet.testapp.kotlin.coroutine.CoroutineActivity;
 import com.gdet.testapp.kotlin.coroutine.OkHttpActivity;
 import com.gdet.testapp.retrofit.RetrofitActivity;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         list.add("Coroutine-OKHttp");
         list.add("CustomCtrlResOne");
         list.add("Retrofit");
+        list.add("Lifecycle");
+        list.add("LiveData");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -79,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, CustomCtrlResOneActivity.class));
                 }else if (position ==6) {
                     startActivity(new Intent(MainActivity.this, RetrofitActivity.class));
+                } else if (position ==7) {
+                    startActivity(new Intent(MainActivity.this, LifecycleActivity.class));
+                } else if (position ==8) {
+                    startActivity(new Intent(MainActivity.this, LiveDataActivity.class));
                 }
             }
         });

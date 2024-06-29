@@ -50,6 +50,17 @@
         <activity android:name=".retrofit.RetrofitActivity">
 
         </activity>
+
+        <activity android:name=".jetpack.lifecycle.LifecycleActivity">
+
+        </activity>
+        <activity android:name=".jetpack.livedata.LiveDataActivity">
+
+        </activity>
+
+        <activity android:name=".jetpack.viewmodel.ViewModelActivity">
+
+        </activity>
     </application>
 
 </manifest>
