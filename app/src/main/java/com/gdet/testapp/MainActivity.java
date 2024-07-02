@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gdet.testapp.annotation.HuanButterKnife;
 import com.gdet.testapp.customctrlres.cp1.CustomCtrlResOneActivity;
+import com.gdet.testapp.fragment.FragmentTestActivity;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
 import com.gdet.testapp.jetpack.lifecycle.LifecycleActivity;
 import com.gdet.testapp.jetpack.livedata.LiveDataActivity;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("Retrofit");
         list.add("Lifecycle");
         list.add("LiveData");
+        list.add("FragmentTest");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -87,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, LifecycleActivity.class));
                 } else if (position ==8) {
                     startActivity(new Intent(MainActivity.this, LiveDataActivity.class));
+                }else if (position ==9) {
+                    startActivity(new Intent(MainActivity.this, FragmentTestActivity.class));
                 }
             }
         });
