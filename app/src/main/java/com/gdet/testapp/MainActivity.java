@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gdet.testapp.annotation.HuanButterKnife;
+import com.gdet.testapp.compose.ComposeActivity;
 import com.gdet.testapp.customctrlres.cp1.CustomCtrlResOneActivity;
 import com.gdet.testapp.fragment.FragmentTestActivity;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("Lifecycle");
         list.add("LiveData");
         list.add("FragmentTest");
+        list.add("ComposeActivity");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -91,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, LiveDataActivity.class));
                 }else if (position ==9) {
                     startActivity(new Intent(MainActivity.this, FragmentTestActivity.class));
+                } else if (position==10) {
+                    startActivity(new Intent(MainActivity.this, ComposeActivity.class));
                 }
             }
         });

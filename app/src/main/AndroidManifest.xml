@@ -65,6 +65,9 @@
         <activity android:name=".fragment.FragmentTestActivity">
 
         </activity>
+        <activity android:name=".compose.ComposeActivity">
+
+        </activity>
     </application>
 
 </manifest>
