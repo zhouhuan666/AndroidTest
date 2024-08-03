@@ -68,6 +68,9 @@
         <activity android:name=".compose.ComposeActivity">
 
         </activity>
+        <activity android:name=".radiogroup.GroupActivity">
+
+        </activity>
     </application>
 
 </manifest>

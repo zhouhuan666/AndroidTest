@@ -21,6 +21,7 @@ import com.gdet.testapp.jetpack.lifecycle.LifecycleActivity;
 import com.gdet.testapp.jetpack.livedata.LiveDataActivity;
 import com.gdet.testapp.kotlin.coroutine.CoroutineActivity;
 import com.gdet.testapp.kotlin.coroutine.OkHttpActivity;
+import com.gdet.testapp.radiogroup.GroupActivity;
 import com.gdet.testapp.retrofit.RetrofitActivity;
 import com.gdet.testapp.rxjava.RxjavaActivity;
 import com.gdet.testapp.touchevent.TouchEventActivity;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("LiveData");
         list.add("FragmentTest");
         list.add("ComposeActivity");
+        list.add("GroupActivity");
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         MainRecyclerViewAdapter mainRecyclerViewAdapter = new MainRecyclerViewAdapter(this, list);
@@ -95,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, FragmentTestActivity.class));
                 } else if (position==10) {
                     startActivity(new Intent(MainActivity.this, ComposeActivity.class));
+                }else if (position==11) {
+                    startActivity(new Intent(MainActivity.this, GroupActivity.class));
                 }
             }
         });
