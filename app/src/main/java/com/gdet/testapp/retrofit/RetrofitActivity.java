@@ -25,8 +25,11 @@ public class RetrofitActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_retrofit);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        Button button = findViewById(R.id.simple_service);
-        button.setOnClickListener(this);
+        Button button1 = findViewById(R.id.simple_service);
+        button1.setOnClickListener(this);
+
+        Button button2 = findViewById(R.id.simple_mosck_service);
+        button2.setOnClickListener(this);
     }
 
     @Override
@@ -35,6 +38,13 @@ public class RetrofitActivity extends AppCompatActivity implements View.OnClickL
             SimpleService simpleService = new SimpleService();
             try {
                 simpleService.execute();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }else  if(v.getId() == R.id.simple_mosck_service){
+            SimpleMockService simpleMockService=new SimpleMockService();
+            try {
+                simpleMockService.execute();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

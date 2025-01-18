@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
@@ -54,6 +56,18 @@ public class SimpleService {
         Github github = retrofit.create(Github.class);
 
         Call<List<Constributer>> call = github.contributors("square", "retrofit");
+
+        call.enqueue(new Callback<List<Constributer>>() {
+            @Override
+            public void onResponse(Call<List<Constributer>> call, Response<List<Constributer>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Constributer>> call, Throwable t) {
+
+            }
+        });
 
         List<Constributer> contributors = call.execute().body();
 

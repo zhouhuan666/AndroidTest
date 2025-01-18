@@ -27,29 +27,23 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
+            signingConfig signingConfigs.sign
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.sign
         }
-        debug{
-            minifyEnabled false
+
+        release {
             signingConfig signingConfigs.sign
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     buildFeatures {
-        compose true
-        aidl true
+        viewBinding true
     }
 
-    composeOptions{
-        kotlinCompilerExtensionVersion '1.5.9'
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -72,6 +66,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.21"
     implementation "com.squareup.okhttp3:okhttp:4.11.0"
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation "com.squareup.retrofit2:retrofit-mock:2.9.0"
+    testImplementation "com.squareup.retrofit2:retrofit-mock:2.9.0"
+    androidTestImplementation "com.squareup.retrofit2:retrofit-mock:2.9.0"
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation "androidx.bluetooth:bluetooth:1.0.0-alpha02"
 
@@ -80,6 +77,7 @@ dependencies {
     implementation 'com.blankj:utilcodex:1.31.1'
     implementation("io.coil-kt.coil3:coil:3.0.2")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.2")
+    implementation("com.github.liangjingkanji:BRV:1.6.1")
 
 
     implementation(platform("androidx.compose:compose-bom:2024.02.00"))
