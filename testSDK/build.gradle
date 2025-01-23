@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.gdet.testapp'
+    namespace 'com.gdet.testapp.testsdk'
     compileSdk 34
 
     defaultConfig {
