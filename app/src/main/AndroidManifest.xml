@@ -77,6 +77,15 @@
         <activity android:name=".coil.CoilActivity">
 
         </activity>
+        <activity android:name=".view.ViewActivity">
+
+        </activity>
+        <activity android:name=".indexbar.IndexBarActivity">
+
+        </activity>
+        <activity android:name=".myindexbar.ContactIndexActivity">
+
+        </activity>
 
         <service
             android:name=".WeatherService"

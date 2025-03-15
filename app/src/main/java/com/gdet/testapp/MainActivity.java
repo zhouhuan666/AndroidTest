@@ -3,29 +3,29 @@ package com.gdet.testapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gdet.testapp.annotation.HuanButterKnife;
 import com.gdet.testapp.coil.CoilActivity;
 import com.gdet.testapp.compose.ComposeActivity;
 import com.gdet.testapp.customctrlres.cp1.CustomCtrlResOneActivity;
 import com.gdet.testapp.fragment.FragmentTestActivity;
 import com.gdet.testapp.gesturedetector.GestureDetectorActivity;
+import com.gdet.testapp.indexbar.IndexBarActivity;
 import com.gdet.testapp.jetpack.lifecycle.LifecycleActivity;
 import com.gdet.testapp.jetpack.livedata.LiveDataActivity;
 import com.gdet.testapp.kotlin.coroutine.CoroutineActivity;
 import com.gdet.testapp.kotlin.coroutine.OkHttpActivity;
+import com.gdet.testapp.myindexbar.ContactIndexActivity;
 import com.gdet.testapp.radiogroup.GroupActivity;
 import com.gdet.testapp.retrofit.RetrofitActivity;
 import com.gdet.testapp.rxjava.RxjavaActivity;
 import com.gdet.testapp.touchevent.TouchEventActivity;
+import com.gdet.testapp.view.ViewActivity;
 import com.gdet.testapp.widget.MainRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         put(10, ComposeActivity.class);
         put(11, GroupActivity.class);
         put(12, CoilActivity.class);
+        put(13, ViewActivity.class);
+        put(14, IndexBarActivity.class);
+        put(15, ContactIndexActivity.class);
     }};
 
     @Override
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 "GestureDetector", "RxJava", "TouchEvent", "Coroutine",
                 "Coroutine-OKHttp", "CustomCtrlResOne", "Retrofit", "Lifecycle",
                 "LiveData", "FragmentTest", "ComposeActivity", "GroupActivity",
-                "CoilActivity"
+                "CoilActivity","ViewActivity","IndexBarActivity","ContactIndexActivity"
         ));
     }
 
