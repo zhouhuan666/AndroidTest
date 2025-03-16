@@ -1,10 +1,15 @@
 package com.gdet.testapp.myindexbar
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gdet.testapp.R
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -19,6 +24,8 @@ class ContactIndexActivity : AppCompatActivity() {
     private lateinit var indexBar: IndexBar
     private lateinit var contactAdapter: ContactAdapter
 
+    private val viewModel: ContactViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contactindex)
@@ -28,7 +35,10 @@ class ContactIndexActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupIndexBar()
-        loadContacts()
+        observeViewModel()
+
+        // 加载联系人数据
+        viewModel.loadContacts()
     }
 
     private fun setupRecyclerView() {
@@ -53,20 +63,38 @@ class ContactIndexActivity : AppCompatActivity() {
                 }
             })
         }
+
+        // 设置联系人点击事件
+        contactAdapter.setOnContactClickListener { contact ->
+            if (contact.hasPhoneNumber()) {
+                // 显示联系人详情对话框
+                val dialog = ContactDetailDialog.newInstance(contact)
+                dialog.show(supportFragmentManager, "ContactDetailDialog")
+            }
+        }
     }
 
     private fun findCurrentIndexForPosition(position: Int): String? {
+        if (position < 0) return null
+
         // 找到当前位置对应的索引
-        val availableIndexes = contactAdapter.getAvailableIndexes().toList().sorted()
-
-        for (i in availableIndexes.indices.reversed()) {
-            val indexPosition = contactAdapter.getPositionForIndex(availableIndexes[i])
-            if (indexPosition <= position) {
-                return availableIndexes[i]
+        val item = contactAdapter.getItemAtPosition(position)
+        return when (item) {
+            is ContactAdapter.Item.Header -> item.letter
+            is ContactAdapter.Item.Contact -> {
+                // 向上查找最近的标题
+                var currentPos = position
+                while (currentPos >= 0) {
+                    val currentItem = contactAdapter.getItemAtPosition(currentPos)
+                    if (currentItem is ContactAdapter.Item.Header) {
+                        return currentItem.letter
+                    }
+                    currentPos--
+                }
+                null
             }
+            null -> null
         }
-
-        return availableIndexes.firstOrNull()
     }
 
     private fun setupIndexBar() {
@@ -79,46 +107,21 @@ class ContactIndexActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadContacts() {
-        val contacts = listOf(
-            Contact("阿里巴巴", "123456789"),
-            Contact("Aron", "987654321"),
-            Contact("鲍勃", "555555555"),
-            Contact("Bill", "444444444"),
-            Contact("曹操", "333333333"),
-            Contact("单田芳", "111222333"),  // "单"是多音字，应该归为S组
-            Contact("单纯", "333222111"),    // 另一个"单"的例子
-            Contact("仇人", "444555666"),    // "仇"是多音字，应该归为Q组
-            Contact("曾国藩", "666777888"),  // "曾"是多音字，应该归为Z组
-            Contact("1号联系人", "111111111"),
-            Contact("@特殊符号", "000000000"),
-            Contact("David", "222222222"),
-            Contact("丁丁", "999999999"),
-            Contact("Emma", "888888888"),
-            Contact("方方", "777777777"),
-            Contact("高高", "666666666"),
-            Contact("黄河", "123123123"),
-            Contact("Jack", "456456456"),
-            Contact("Kevin", "789789789"),
-            Contact("李四", "321321321"),
-            Contact("Mary", "654654654"),
-            Contact("牛牛", "987987987"),
-            Contact("欧阳", "135792468"),
-            Contact("朴树", "246813579"),    // "朴"是多音字，应该归为P组
-            Contact("钱钱", "112233445"),
-            Contact("沈阳", "556677889"),    // "沈"是多音字，应该归为S组
-            Contact("Tom", "998877665"),
-            Contact("王五", "554433221"),
-            Contact("小明", "112233445"),
-            Contact("杨过", "556677889"),
-            Contact("张三", "998877665")
-        )
+    private fun observeViewModel() {
+        // 观察分组后的联系人数据
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.groupedContacts.collect { groupedContacts ->
+                    contactAdapter.submitList(groupedContacts)
+                }
+            }
+        }
 
-        contactAdapter.updateContacts(contacts)
-
-        // 更新索引条的可用索引
-        val allIndexes = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".map { it.toString() }.toSet()
-        val unavailableIndexes = allIndexes - contactAdapter.getAvailableIndexes()
-        indexBar.setDisabledIndexes(unavailableIndexes)
+        // 观察可用索引
+        viewModel.availableIndexes.observe(this) { availableIndexes ->
+            val allIndexes = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#".map { it.toString() }.toSet()
+            val unavailableIndexes = allIndexes - availableIndexes
+            indexBar.setDisabledIndexes(unavailableIndexes)
+        }
     }
 }

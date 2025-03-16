@@ -131,10 +131,4 @@ class IndexBar @JvmOverloads constructor(
             invalidate()
         }
     }
-
-    fun getCurrentIndex(): String? {
-        return if (currentIndex >= 0 && currentIndex < indexList.size) {
-            indexList[currentIndex]
-        } else null
-    }
 }

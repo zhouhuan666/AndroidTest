@@ -15,16 +15,40 @@ import com.gdet.testapp.R
  * 描述：
  *
  */
-class ContactAdapter(private var contacts: List<Contact> = emptyList()) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ContactAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_CONTACT = 1
     }
 
-    private var indexPositionMap = mutableMapOf<String, Int>()
-    private var sectionHeaders = mutableListOf<String>()
+    private var groupedContacts: Map<String, List<ContactData>> = emptyMap()
+    private var flattenedItems: List<Item> = emptyList()
+    private var onContactClickListener: ((ContactData) -> Unit)? = null
+
+    // 表示列表中的项目类型
+    sealed class Item {
+        data class Header(val letter: String) : Item()
+        data class Contact(val contact: ContactData) : Item()
+    }
+
+    fun setOnContactClickListener(listener: (ContactData) -> Unit) {
+        onContactClickListener = listener
+    }
+
+    fun submitList(groupedContacts: Map<String, List<ContactData>>) {
+        this.groupedContacts = groupedContacts
+
+        // 将分组数据扁平化为列表项
+        val items = mutableListOf<Item>()
+        for ((index, contacts) in groupedContacts) {
+            items.add(Item.Header(index))
+            items.addAll(contacts.map { Item.Contact(it) })
+        }
+
+        this.flattenedItems = items
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -42,100 +66,36 @@ class ContactAdapter(private var contacts: List<Contact> = emptyList()) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is HeaderViewHolder -> {
-                val headerPosition = sectionHeaders.indexOfFirst {
-                    indexPositionMap[it] == position
-                }
-                if (headerPosition != -1) {
-                    holder.bind(sectionHeaders[headerPosition])
-                }
-            }
-            is ContactViewHolder -> {
-                // 找到实际的联系人位置（减去之前的header数量）
-                var contactIndex = position
-                for (header in sectionHeaders) {
-                    val headerPos = indexPositionMap[header] ?: continue
-                    if (headerPos < position) {
-                        contactIndex--
-                    }
-                }
-
-                if (contactIndex >= 0 && contactIndex < contacts.size) {
-                    holder.bind(contacts[contactIndex])
-                }
-            }
+        when (val item = flattenedItems[position]) {
+            is Item.Header -> (holder as HeaderViewHolder).bind(item.letter)
+            is Item.Contact -> (holder as ContactViewHolder).bind(item.contact)
         }
     }
 
-    override fun getItemCount(): Int {
-        return contacts.size + sectionHeaders.size
-    }
+    override fun getItemCount(): Int = flattenedItems.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (indexPositionMap.values.contains(position)) {
-            TYPE_HEADER
-        } else {
-            TYPE_CONTACT
+        return when (flattenedItems[position]) {
+            is Item.Header -> TYPE_HEADER
+            is Item.Contact -> TYPE_CONTACT
         }
-    }
-
-    fun updateContacts(newContacts: List<Contact>) {
-        // 按照排序规则对联系人进行分组和排序
-        val groupedContacts = newContacts.groupBy { it.sortKey }
-
-        // 确保按照A-Z#的顺序排列，将#组放在最后
-        val sortedGroups = groupedContacts.entries.sortedWith(compareBy {
-            if (it.key == "#") "Z1" else it.key // 使#排在Z之后
-        })
-
-        // 对每组内的联系人进行排序
-        val sortedContacts = mutableListOf<Contact>()
-        val availableIndexes = mutableSetOf<String>()
-
-        indexPositionMap.clear()
-        sectionHeaders.clear()
-
-        var currentPosition = 0
-
-        for ((index, contactsInGroup) in sortedGroups) {
-            if (contactsInGroup.isNotEmpty()) {
-                availableIndexes.add(index)
-                sectionHeaders.add(index)
-                indexPositionMap[index] = currentPosition
-                currentPosition++
-
-                // 组内排序：先按首字符类型（特殊符号、数字、中文、英文），再按Unicode
-                val sortedGroupContacts = contactsInGroup.sortedWith(
-                    compareBy<Contact> { contact ->
-                        val firstChar = contact.name.firstOrNull() ?: ' '
-                        when {
-                            firstChar.isDigit() -> 1
-                            firstChar.toString().matches(Regex("[\\u4e00-\\u9fa5]")) -> 2
-                            firstChar.isLetter() -> 3
-                            else -> 0 // 特殊字符
-                        }
-                    }.thenBy { it.inGroupSortKey }
-                )
-
-                sortedContacts.addAll(sortedGroupContacts)
-                currentPosition += sortedGroupContacts.size
-            }
-        }
-
-        contacts = sortedContacts
-        notifyDataSetChanged()
-    }
-
-    fun getAvailableIndexes(): Set<String> {
-        return sectionHeaders.toSet()
     }
 
     fun getPositionForIndex(index: String): Int {
-        return indexPositionMap[index] ?: 0
+        return flattenedItems.indexOfFirst { it is Item.Header && it.letter == index }
     }
 
-    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun getAvailableIndexes(): Set<String> {
+        return groupedContacts.keys
+    }
+
+    fun getItemAtPosition(position: Int): Item? {
+        return if (position >= 0 && position < flattenedItems.size) {
+            flattenedItems[position]
+        } else null
+    }
+
+    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val headerText: TextView = itemView.findViewById(R.id.tvHeader)
 
         fun bind(header: String) {
@@ -143,13 +103,23 @@ class ContactAdapter(private var contacts: List<Contact> = emptyList()) :
         }
     }
 
-    class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameText: TextView = itemView.findViewById(R.id.tvName)
-        private val phoneText: TextView = itemView.findViewById(R.id.tvPhone)
 
-        fun bind(contact: Contact) {
-            nameText.text = contact.name
-            phoneText.text = contact.phoneNumber
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = flattenedItems[position]
+                    if (item is Item.Contact) {
+                        onContactClickListener?.invoke(item.contact)
+                    }
+                }
+            }
+        }
+
+        fun bind(contact: ContactData) {
+            nameText.text = contact.displayName
         }
     }
 }
