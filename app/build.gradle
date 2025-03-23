@@ -9,13 +9,33 @@ android {
 
     defaultConfig {
         applicationId "com.gdet.testapp"
-        minSdk 29
+        minSdk 30
         targetSdk 34
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    // 添加 lint 选项以忽略隐藏 API 的问题
+    lintOptions {
+        disable 'InvalidPackage'
+        disable 'RestrictedApi'
+        // 如果需要，可以添加更多需要禁用的 lint 检查
+    }
+
+    // 添加对隐藏 API 的访问支持
+    kotlinOptions {
+        freeCompilerArgs += [
+                '-Xskip-prerelease-check',
+                '-Xjvm-default=all'
+        ]
+    }
+
+    // 添加这个配置来处理资源冲突
+//    androidResources {
+//        additionalParameters "--allow-reserved-package-id"
+//    }
 
     signingConfigs {
         sign {
@@ -24,17 +44,27 @@ android {
             keyAlias = 'test'
             keyPassword '123456'
         }
+        create("release") {
+            storeFile = file("../E541.keystore")
+            keyAlias = "benteng"
+            keyPassword = "benteng"
+            storePassword = "benteng"
+            enableV1Signing = true
+            enableV2Signing = true
+        }
     }
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.sign
+//            signingConfig signingConfigs.sign
+            signingConfig = signingConfigs.getByName("release")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         release {
-            signingConfig signingConfigs.sign
+//            signingConfig signingConfigs.sign
+            signingConfig = signingConfigs.getByName("release")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -50,7 +80,63 @@ android {
     }
 }
 
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        variant.javaCompileProvider.get().classpath =
+                files("libs/framework13.jar") + variant.javaCompileProvider.get().classpath
+    }
+}
+
+//gradle.projectsEvaluated {
+//    tasks.withType(JavaCompile) {
+//        Set<File> fileSet = options.bootstrapClasspath.getFiles()
+//        List<File> newFileList = new ArrayList<>()
+//        newFileList.add(new File("libs/framework13.jar"))
+//        newFileList.addAll(fileSet)
+//        options.bootstrapClasspath = files(newFileList.toArray())
+//    }
+//}
+
+// 添加编译时类路径配置
+//gradle.projectsEvaluated {
+//    tasks.withType(JavaCompile) {
+//        if (options.bootstrapClasspath == null) {
+//            options.bootstrapClasspath = files(new File("libs/framework13.jar"))
+//        } else {
+//            Set<File> fileSet = options.bootstrapClasspath.files
+//            List<File> newFileList = new ArrayList<>()
+//            newFileList.add(new File("libs/framework13.jar"))
+//            newFileList.addAll(fileSet)
+//            options.bootstrapClasspath = files(newFileList.toArray())
+//        }
+//    }
+//}
+
+
+//修改点三 ：调整Android SDK优先级
+//gradle.buildFinished {
+//    //这里可以配置多个modules模块使用framework.jar包
+//    String[] modules = ["app"]
+//    for (String m : modules) {
+//        def imlFile = file("../.idea/modules/${m}/AndroidTest.${m}.iml")
+//        try {
+//            def parsedXml = (new XmlParser()).parse(imlFile)
+//            def jdkNode = parsedXml.component[1].orderEntry.find { it.'@type' == 'jdk' }
+//            parsedXml.component[1].remove(jdkNode)
+//            def sdkString = "Android API " + android.compileSdkVersion.substring("android-".length()) + " Platform"
+//            new groovy.util.Node(parsedXml.component[1], 'orderEntry', ['type': 'jdk', 'jdkName': sdkString, 'jdkType': 'Android SDK'])
+//            groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace()
+//        }
+//    }
+//}
+
+
 dependencies {
+    compileOnly files("libs/framework13.jar")
+
+    implementation 'androidx.annotation:annotation:1.7.1'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'
@@ -89,7 +175,43 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("com.google.accompanist:accompanist-themeadapter-material3:0.28.0")
     implementation project(":testSDK")
-    implementation files("libs/framework-bluetooth.jar")
+//    implementation files("libs/framework-bluetooth.jar")
+
 
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
+
+// 添加这个配置来处理隐藏 API 的访问
+//configurations.all {
+//    resolutionStrategy {
+//        force 'androidx.core:core-ktx:1.12.0'  // 确保使用最新版本
+//    }
+//}
+
+// 添加这个任务来修复 IDE 索引
+//tasks.register('fixIdeaImports') {
+//    doLast {
+//        def ideaDir = file('.idea')
+//        if (ideaDir.exists()) {
+//            def libraries = new File(ideaDir, 'libraries')
+//            if (libraries.exists()) {
+//                libraries.listFiles().each { file ->
+//                    if (file.name.contains('Gradle') && file.text.contains('framework13.jar')) {
+//                        def text = file.text
+//                        text = text.replace('<CLASSES>', '<CLASSES>\n      <root url="jar://$PROJECT_DIR$/app/libs/framework13.jar!/" />')
+//                        file.text = text
+//                        println "Updated ${file.name}"
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
+// 在项目评估后执行
+//afterEvaluate {
+//    // 确保 framework13.jar 被正确处理
+//    android.applicationVariants.all { variant ->
+//        variant.javaCompileProvider.get().classpath += files("$projectDir/libs/framework13.jar")
+//    }
+//}
