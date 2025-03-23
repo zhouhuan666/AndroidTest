@@ -2,4 +2,7 @@
 <resources>
     <dimen name="toggle_button_padding_horizontal">16dp</dimen>
     <dimen name="toggle_button_padding_vertical">8dp</dimen>
+
+    <!-- Size of nearby icon -->
+    <dimen name="bt_nearby_icon_size">24dp</dimen>
 </resources>
