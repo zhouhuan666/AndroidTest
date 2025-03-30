@@ -16,7 +16,6 @@
 
 package com.android.settingslib.bluetooth;
 
-import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothCsipSetCoordinator;
 import android.bluetooth.BluetoothDevice;
@@ -31,6 +30,8 @@ import android.content.IntentFilter;
 import android.os.UserHandle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.bluetooth.BluetoothA2dp;
+
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;

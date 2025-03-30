@@ -23,12 +23,9 @@ import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
+
 import android.media.AudioManager;
-import android.net.NetworkCapabilities;
-import android.net.TetheringManager;
-import android.net.vcn.VcnTransportInfo;
-import android.net.wifi.WifiInfo;
+
 import android.os.BatteryManager;
 
 

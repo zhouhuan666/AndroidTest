@@ -16,8 +16,8 @@
 
 package com.android.settingslib.bluetooth;
 
-import static android.bluetooth.BluetoothAdapter.ACTIVE_DEVICE_AUDIO;
-import static android.bluetooth.BluetoothAdapter.ACTIVE_DEVICE_PHONE_CALL;
+
+
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
@@ -199,8 +199,8 @@ public class HearingAidProfile implements LocalBluetoothProfile {
             return false;
         }
         int profiles = Utils.isAudioModeOngoingCall(mContext)
-                ? ACTIVE_DEVICE_PHONE_CALL
-                : ACTIVE_DEVICE_AUDIO;
+                ? BluetoothAdapter.ACTIVE_DEVICE_PHONE_CALL
+                : BluetoothAdapter.ACTIVE_DEVICE_AUDIO;
         return device == null
                 ? mBluetoothAdapter.removeActiveDevice(profiles)
                 : mBluetoothAdapter.setActiveDevice(device, profiles);

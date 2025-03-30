@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.7'  // 添加这一行
 }
 
 android {
@@ -78,14 +79,114 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
 }
 
+// 使用更简单的方法加载多个自定义JAR文件
 afterEvaluate {
     android.applicationVariants.all { variant ->
+        // 确保我们的JAR文件在编译classpath的最前面
         variant.javaCompileProvider.get().classpath =
-                files("libs/framework13.jar") + variant.javaCompileProvider.get().classpath
+                files("libs/framework-bluetooth.jar", "libs/framework-minus-apex.jar") +
+                        variant.javaCompileProvider.get().classpath
     }
 }
+
+//// 创建一个任务来修复Android Studio索引问题
+//tasks.register('fixCustomJarsIndexing') {
+//    doLast {
+//        // 创建.idea目录下的libraries文件夹（如果不存在）
+//        def librariesDir = new File(rootProject.projectDir, '.idea/libraries')
+//        if (!librariesDir.exists()) {
+//            librariesDir.mkdirs()
+//        }
+//
+//        // 创建两个XML文件，分别告诉Android Studio关于我们的jar
+//        def bluetoothXmlContent = """
+//<component name="libraryTable">
+//  <library name="framework-bluetooth">
+//    <CLASSES>
+//      <root url="jar://\$PROJECT_DIR\$/app/libs/framework-bluetooth.jar!/" />
+//    </CLASSES>
+//    <JAVADOC />
+//    <SOURCES />
+//  </library>
+//</component>
+//"""
+//
+//        def minusApexXmlContent = """
+//<component name="libraryTable">
+//  <library name="framework-minus-apex">
+//    <CLASSES>
+//      <root url="jar://\$PROJECT_DIR\$/app/libs/framework-minus-apex.jar!/" />
+//    </CLASSES>
+//    <JAVADOC />
+//    <SOURCES />
+//  </library>
+//</component>
+//"""
+//
+//        def bluetoothXmlFile = new File(librariesDir, 'framework-bluetooth.xml')
+//        bluetoothXmlFile.text = bluetoothXmlContent
+//
+//        def minusApexXmlFile = new File(librariesDir, 'framework-minus-apex.xml')
+//        minusApexXmlFile.text = minusApexXmlContent
+//
+//        println "Created/Updated JAR library XML files in .idea/libraries"
+//
+//        // 修改项目的.iml文件以引用这些库
+//        def modulesDir = new File(rootProject.projectDir, '.idea/modules')
+//        if (modulesDir.exists()) {
+//            modulesDir.eachFileRecurse { file ->
+//                if (file.name.endsWith('.iml')) {
+//                    try {
+//                        def xml = new XmlParser().parse(file)
+//                        def component = xml.component.find { it.@name == 'NewModuleRootManager' }
+//                        if (component) {
+//                            // 检查是否已经包含我们的库
+//                            def hasBluetoothEntry = component.orderEntry.any {
+//                                it.@type == 'library' && it.@name == 'framework-bluetooth'
+//                            }
+//                            def hasMinusApexEntry = component.orderEntry.any {
+//                                it.@type == 'library' && it.@name == 'framework-minus-apex'
+//                            }
+//
+//                            if (!hasBluetoothEntry) {
+//                                // 添加framework-bluetooth库引用
+//                                component.appendNode('orderEntry', [type: 'library', name: 'framework-bluetooth', level: 'project'])
+//                            }
+//
+//                            if (!hasMinusApexEntry) {
+//                                // 添加framework-minus-apex库引用
+//                                component.appendNode('orderEntry', [type: 'library', name: 'framework-minus-apex', level: 'project'])
+//                            }
+//
+//                            // 保存修改后的XML
+//                            new XmlNodePrinter(new PrintWriter(new FileWriter(file))).print(xml)
+//                            println "Updated ${file.name} with custom JAR references"
+//                        }
+//                    } catch (Exception e) {
+//                        println "Error processing ${file.name}: ${e.message}"
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//// 确保在同步后执行索引修复任务
+//tasks.named('preBuild') {
+//    dependsOn tasks.named('fixCustomJarsIndexing')
+//}
+
+
+
+//afterEvaluate {
+//    android.applicationVariants.all { variant ->
+//                variant.javaCompileProvider.get().classpath =
+//                        files("libs/framework-bluetooth.jar", "libs/framework-minus-apex.jar") + variant.javaCompileProvider.get().classpath
+//    }
+//}
 
 //gradle.projectsEvaluated {
 //    tasks.withType(JavaCompile) {
@@ -134,7 +235,9 @@ afterEvaluate {
 
 
 dependencies {
-    compileOnly files("libs/framework13.jar")
+//    compileOnly files("libs/framework13.jar")
+    compileOnly files("libs/framework-minus-apex.jar")
+    compileOnly files("libs/framework-bluetooth.jar")
 
     implementation 'androidx.annotation:annotation:1.7.1'
 
