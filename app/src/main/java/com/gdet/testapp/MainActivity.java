@@ -1,15 +1,21 @@
 package com.gdet.testapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gdet.testapp.bluetooth.BluetoothActivity;
 import com.gdet.testapp.coil.CoilActivity;
 import com.gdet.testapp.compose.ComposeActivity;
 import com.gdet.testapp.customctrlres.cp1.CustomCtrlResOneActivity;
@@ -68,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         put(13, ViewActivity.class);
         put(14, IndexBarActivity.class);
         put(15, ContactIndexActivity.class);
+        put(16, BluetoothActivity.class);
     }};
 
     @Override
@@ -78,6 +85,74 @@ public class MainActivity extends AppCompatActivity {
         initData();
         initRecyclerView();
         initButton();
+        requestBluetoothPermissions();
+    }
+
+
+    // 检查并请求蓝牙权限
+    private void requestBluetoothPermissions() {
+        Log.d(TAG, "requestBluetoothPermissions: ");
+        // 存储需要请求的权限
+        List<String> permissionsToRequest = new ArrayList<>();
+
+        // 对于 Android 12 及以上版本，需要这些新的蓝牙权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(android.Manifest.permission.BLUETOOTH_SCAN);
+            }
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(android.Manifest.permission.BLUETOOTH_CONNECT);
+            }
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(android.Manifest.permission.BLUETOOTH_ADVERTISE);
+            }
+        } else {
+            // 对于旧版本 Android，检查传统蓝牙权限
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(android.Manifest.permission.BLUETOOTH);
+            }
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(android.Manifest.permission.BLUETOOTH_CONNECT);
+            }
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.BLUETOOTH_ADMIN);
+            }
+        }
+
+        // 如果有需要请求的权限，则发起请求
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    permissionsToRequest.toArray(new String[0]),
+                    99);
+        } else {
+            // 已有所有权限，初始化蓝牙
+//            initBt();
+        }
+    }
+
+    // 处理权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 99) {
+            boolean allPermissionsGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
+                }
+            }
+            Log.d(TAG, "onRequestPermissionsResult   " + allPermissionsGranted);
+
+            if (allPermissionsGranted) {
+                // 权限已获取，初始化蓝牙
+//                initBt();
+            } else {
+                // 权限被拒绝，处理这种情况
+                Log.e(TAG, "蓝牙权限被拒绝");
+                // 可以显示提示对话框或关闭活动
+            }
+        }
     }
 
     private void initData() {
@@ -85,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 "GestureDetector", "RxJava", "TouchEvent", "Coroutine",
                 "Coroutine-OKHttp", "CustomCtrlResOne", "Retrofit", "Lifecycle",
                 "LiveData", "FragmentTest", "ComposeActivity", "GroupActivity",
-                "CoilActivity","ViewActivity","IndexBarActivity","ContactIndexActivity"
+                "CoilActivity","ViewActivity","IndexBarActivity","ContactIndexActivity","BluetoothActivity"
         ));
     }
 
