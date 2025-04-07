@@ -142,17 +142,17 @@ public class BluetoothActivity extends AppCompatActivity {
 
             @Override
             public void onDeviceBondStateChanged(CachedBluetoothDevice cachedDevice, int bondState) {
-                Log.d(TAG, "onDeviceBondStateChanged: " + cachedDevice + ", bondState: " + bondState);
+                Log.d(TAG, "onDeviceBondStateChanged: " + cachedDevice.getName() + ", bondState: " + bondState);
             }
 
             @Override
             public void onConnectionStateChanged(CachedBluetoothDevice cachedDevice, int state) {
-                Log.d(TAG, "onConnectionStateChanged: " + cachedDevice + ", state: " + state);
+                Log.d(TAG, "onConnectionStateChanged: " + cachedDevice.getName() + ", state: " + state);
             }
 
             @Override
             public void onActiveDeviceChanged(CachedBluetoothDevice activeDevice, int bluetoothProfile) {
-                Log.d(TAG, "onActiveDeviceChanged: " + activeDevice + ", bluetoothProfile: " + bluetoothProfile);
+                Log.d(TAG, "onActiveDeviceChanged: " + activeDevice.getName() + ", bluetoothProfile: " + bluetoothProfile);
             }
 
             @Override
@@ -162,12 +162,12 @@ public class BluetoothActivity extends AppCompatActivity {
 
             @Override
             public void onProfileConnectionStateChanged(CachedBluetoothDevice cachedDevice, int state, int bluetoothProfile) {
-                Log.d(TAG, "onProfileConnectionStateChanged: " + cachedDevice + ", state: " + state + ", bluetoothProfile: " + bluetoothProfile);
+                Log.d(TAG, "onProfileConnectionStateChanged: " + cachedDevice.getName() + ", state: " + state + ", bluetoothProfile: " + bluetoothProfile);
             }
 
             @Override
             public void onAclConnectionStateChanged(CachedBluetoothDevice cachedDevice, int state) {
-                Log.d(TAG, "onAclConnectionStateChanged: " + cachedDevice + ", state: " + state);
+                Log.d(TAG, "onAclConnectionStateChanged: " + cachedDevice.getName() + ", state: " + state);
             }
         });
     }
