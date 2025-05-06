@@ -239,6 +239,7 @@ dependencies {
     compileOnly files("libs/framework-minus-apex.jar")
     compileOnly files("libs/framework-bluetooth.jar")
     implementation files("libs/BtPhoneSDK_debug_20250401_1433.aar")
+    compileOnly files("libs/framework-wifi.jar")
 
     implementation 'androidx.annotation:annotation:1.7.1'
 
