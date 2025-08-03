@@ -26,6 +26,8 @@ import com.gdet.testapp.jetpack.lifecycle.LifecycleActivity;
 import com.gdet.testapp.jetpack.livedata.LiveDataActivity;
 import com.gdet.testapp.kotlin.coroutine.CoroutineActivity;
 import com.gdet.testapp.kotlin.coroutine.OkHttpActivity;
+import com.gdet.testapp.mvi.simple.CounterActivity;
+import com.gdet.testapp.mvi.complete.UserListActivity;
 import com.gdet.testapp.myindexbar.ContactIndexActivity;
 import com.gdet.testapp.radiogroup.GroupActivity;
 import com.gdet.testapp.retrofit.RetrofitActivity;
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         put(14, IndexBarActivity.class);
         put(15, ContactIndexActivity.class);
         put(16, BluetoothActivity.class);
+        put(17, CounterActivity.class);
+        put(18, UserListActivity.class);
     }};
 
     @Override
@@ -160,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 "GestureDetector", "RxJava", "TouchEvent", "Coroutine",
                 "Coroutine-OKHttp", "CustomCtrlResOne", "Retrofit", "Lifecycle",
                 "LiveData", "FragmentTest", "ComposeActivity", "GroupActivity",
-                "CoilActivity","ViewActivity","IndexBarActivity","ContactIndexActivity","BluetoothActivity"
+                "CoilActivity","ViewActivity","IndexBarActivity","ContactIndexActivity","BluetoothActivity",
+                "MVI计数器示例", "MVI用户列表示例"
         ));
     }
 

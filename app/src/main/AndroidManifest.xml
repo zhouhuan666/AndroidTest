@@ -99,6 +99,19 @@
 
         </activity>
 
+        <!-- MVI架构示例Activity -->
+        <activity android:name=".mvi.simple.CounterActivity"
+            android:label="MVI计数器示例"
+            android:theme="@style/Theme.TestApp.NoActionBar">
+
+        </activity>
+
+        <activity android:name=".mvi.complete.UserListActivity"
+            android:label="MVI用户列表示例"
+            android:theme="@style/Theme.TestApp.NoActionBar">
+
+        </activity>
+
         <service
             android:name=".WeatherService"
             android:enabled="true"

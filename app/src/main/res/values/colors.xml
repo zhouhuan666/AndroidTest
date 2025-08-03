@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#66000000</color>
+
+    <!-- MVI示例相关颜色 -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryLight">#E3F2FD</color>
+    <color name="selectedOverlay">#332196F3</color>
 </resources>
