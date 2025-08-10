@@ -1,0 +1,44 @@
+---
+globs: *.java
+description: Java代码风格和规范
+---
+
+# Java代码风格指南
+
+## 命名规范
+- 类名使用PascalCase: `MainActivity`, `BluetoothActivity`
+- 方法和变量使用camelCase: `onCreate()`, `deviceName`
+- 常量使用UPPER_SNAKE_CASE: `private static final int MAX_RETRY = 3`
+- 包名使用小写: `com.gdet.testapp`
+
+## 类和方法设计
+- 遵循单一职责原则
+- 方法长度控制在50行以内
+- 类长度控制在500行以内
+- 使用有意义的方法和变量名
+
+## Android组件规范
+- Activity类继承AppCompatActivity
+- 重写生命周期方法时调用super方法
+- 在onCreate中进行初始化工作
+
+## 异常处理
+- 不要忽略catch块中的异常
+- 使用具体的异常类型而非通用Exception
+- 适当记录异常日志
+
+## 示例参考
+参考项目中的实现:
+- Activity: [MainActivity.java](mdc:app/src/main/java/com/gdet/testapp/MainActivity.java)
+- 蓝牙功能: [BluetoothActivity.java](mdc:app/src/main/java/com/gdet/testapp/bluetooth/BluetoothActivity.java)
+- 自定义View: [IndexBar.java](mdc:app/src/main/java/com/gdet/testapp/indexbar/IndexBar.java)
+
+## 资源管理
+- 使用try-with-resources处理资源
+- 及时关闭InputStream/OutputStream
+- 正确管理Cursor生命周期
+
+## 注解使用
+- 使用@Override注解重写方法
+- 使用@Nullable和@NonNull提供空安全提示
+- 参考自定义注解: [BindView.java](mdc:annotations/src/main/java/com/gdet/annotations/BindView.java)

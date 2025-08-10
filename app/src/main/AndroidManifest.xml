@@ -112,6 +112,20 @@
 
         </activity>
 
+        <!-- Hilt依赖注入示例Activity -->
+        <activity android:name=".hilt.presentation.HiltDemoActivity"
+            android:label="Hilt依赖注入示例"
+            android:theme="@style/Theme.TestApp.NoActionBar">
+
+        </activity>
+
+        <!-- JNI测试Activity -->
+        <activity android:name=".jni.JniTestActivity"
+            android:label="JNI测试示例"
+            android:theme="@style/Theme.TestApp.NoActionBar">
+
+        </activity>
+
         <service
             android:name=".WeatherService"
             android:enabled="true"

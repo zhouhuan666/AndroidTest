@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'  // 添加kapt插件支持Room注解处理
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.7'  // 添加这一行
+    id 'com.google.dagger.hilt.android'  // 添加Hilt插件
 }
 
 android {
@@ -17,6 +18,22 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // NDK配置 - 指定支持的CPU架构
+        ndk {
+            // 指定要编译的CPU架构，可以根据需要添加或删除
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+        }
+        
+        // CMake构建参数（可选）
+        externalNativeBuild {
+            cmake {
+                // C++编译参数
+                cppFlags "-std=c++17"
+                // 其他编译参数可以在这里添加
+                // arguments "-DANDROID_STL=c++_shared"
+            }
+        }
     }
 
     // 添加 lint 选项以忽略隐藏 API 的问题
@@ -74,6 +91,16 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+    
+    // 外部本地构建配置 - 告诉Gradle如何构建C++代码
+    externalNativeBuild {
+        cmake {
+            // 指定CMakeLists.txt文件的路径
+            path "src/main/cpp/CMakeLists.txt"
+            // 指定CMake版本（可选）
+            version "3.22.1"
+        }
     }
 
     compileOptions {
@@ -283,6 +310,16 @@ dependencies {
 
     implementation 'com.belerweb:pinyin4j:2.5.1'
 
+    // Hilt依赖注入框架
+    implementation 'com.google.dagger:hilt-android:2.48'
+    kapt 'com.google.dagger:hilt-compiler:2.48'
+    
+    // Hilt与Android组件集成
+    implementation 'androidx.hilt:hilt-navigation-fragment:1.1.0'
+    kapt 'androidx.hilt:hilt-compiler:1.1.0'
+    
+    // OkHttp logging interceptor for Hilt example
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
 
     implementation(platform("androidx.compose:compose-bom:2024.02.00"))
     implementation("androidx.activity:activity-compose:1.8.2")

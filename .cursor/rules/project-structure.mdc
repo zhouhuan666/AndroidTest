@@ -1,0 +1,38 @@
+---
+alwaysApply: true
+description: Android项目结构指南和模块组织
+---
+
+# Android项目结构指南
+
+## 模块组织
+- **app/**: 主应用模块，包含所有主要功能实现
+  - 蓝牙功能: [BluetoothActivity.java](mdc:app/src/main/java/com/gdet/testapp/bluetooth/BluetoothActivity.java)
+  - 车载蓝牙: [CarBluetoothCallManager.kt](mdc:app/src/main/java/com/gdet/testapp/bluetooth/car/CarBluetoothCallManager.kt)
+  - MVI架构示例: [app/src/main/java/com/gdet/testapp/mvi/](mdc:app/src/main/java/com/gdet/testapp/mvi/)
+  - Jetpack组件: [app/src/main/java/com/gdet/testapp/jetpack/](mdc:app/src/main/java/com/gdet/testapp/jetpack/)
+
+- **testSDK/**: SDK模块，提供天气服务
+  - AIDL接口: [IWeatherService.aidl](mdc:testSDK/src/main/aidl/com/gdet/testapp/IWeatherService.aidl)
+  - SDK实现: [WeatherSDK.kt](mdc:testSDK/src/main/java/com/gdet/testapp/WeatherSDK.kt)
+
+- **weatherclient/**: 天气客户端应用
+  - 主活动: [MainActivity.kt](mdc:weatherclient/src/main/java/com/gdet/weatherclient/MainActivity.kt)
+
+- **basicsample/**: 基础示例应用，展示数据绑定和MVVM
+  - 主应用: [BasicApp.java](mdc:basicsample/src/main/java/com/gdet/basicsample/BasicApp.java)
+
+- **annotations/**: 自定义注解定义
+  - 视图绑定注解: [BindView.java](mdc:annotations/src/main/java/com/gdet/annotations/BindView.java)
+
+- **annotation_processor/**: 注解处理器
+  - 编译器: [AnnotationCompiler.java](mdc:annotation_processor/src/main/java/com/gdet/annotation_processor/AnnotationCompiler.java)
+
+## 主要入口点
+- 主应用入口: [MainActivity.java](mdc:app/src/main/java/com/gdet/testapp/MainActivity.java)
+- 应用类: [AndroidTestApplication.java](mdc:app/src/main/java/com/gdet/testapp/AndroidTestApplication.java)
+
+## 配置文件
+- 项目配置: [settings.gradle](mdc:settings.gradle)
+- Gradle配置: [build.gradle](mdc:build.gradle)
+- 应用Gradle: [app/build.gradle](mdc:app/build.gradle)

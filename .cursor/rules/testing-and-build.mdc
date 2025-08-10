@@ -1,0 +1,78 @@
+---
+description: 测试策略和构建配置指南
+---
+
+# 测试和构建配置指南
+
+## 测试结构
+
+### 单元测试
+位置模式: `src/test/java/`
+- [ExampleUnitTest.java](mdc:app/src/test/java/com/gdet/testapp/ExampleUnitTest.java)
+- [ExampleUnitTest.kt](mdc:testSDK/src/test/java/com/gdtp/testsdk/ExampleUnitTest.kt)
+
+### 集成测试
+位置模式: `src/androidTest/java/`
+- [ExampleInstrumentedTest.java](mdc:app/src/androidTest/java/com/gdet/testapp/ExampleInstrumentedTest.java)
+- [Test.java](mdc:app/src/androidTest/java/com/gdet/testapp/Test.java)
+
+## 模块构建配置
+
+### 应用模块
+- 主模块: [app/build.gradle](mdc:app/build.gradle)
+- 基础示例: [basicsample/build.gradle](mdc:basicsample/build.gradle)
+- 天气客户端: [weatherclient/build.gradle](mdc:weatherclient/build.gradle)
+
+### 库模块
+- SDK模块: [testSDK/build.gradle](mdc:testSDK/build.gradle)
+- 注解库: [annotations/build.gradle](mdc:annotations/build.gradle)
+- 注解处理器: [annotation_processor/build.gradle](mdc:annotation_processor/build.gradle)
+
+## 构建配置最佳实践
+
+### Gradle配置
+- 根项目配置: [build.gradle](mdc:build.gradle)
+- 项目设置: [settings.gradle](mdc:settings.gradle)
+- 全局属性: [gradle.properties](mdc:gradle.properties)
+
+### 代码混淆
+- ProGuard规则: [app/proguard-rules.pro](mdc:app/proguard-rules.pro)
+- 消费者规则: [testSDK/consumer-rules.pro](mdc:testSDK/consumer-rules.pro)
+
+### 依赖管理
+- 使用implementation而非compile
+- 区分api和implementation依赖
+- 统一版本管理
+- 避免重复依赖
+
+## 测试最佳实践
+
+### 单元测试规范
+- 测试类名以Test结尾
+- 方法名描述测试场景: `shouldReturnTrueWhenValidInput()`
+- 使用AAA模式: Arrange, Act, Assert
+- Mock外部依赖
+
+### 集成测试规范
+- 测试完整功能流程
+- 验证组件交互
+- 使用测试规则管理生命周期
+- 数据隔离
+
+### UI测试
+- 使用Espresso进行UI测试
+- 页面对象模式
+- 等待异步操作完成
+- 屏幕录制和截图
+
+## 持续集成
+- 自动化测试运行
+- 代码质量检查
+- 构建产物管理
+- 多环境部署
+
+## 调试工具
+- 使用Android Studio Profiler
+- ADB调试命令
+- 日志分级管理
+- 崩溃报告收集

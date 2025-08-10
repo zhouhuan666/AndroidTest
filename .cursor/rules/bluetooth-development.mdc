@@ -1,0 +1,38 @@
+---
+description: 蓝牙功能开发指南和最佳实践
+---
+
+# 蓝牙功能开发指南
+
+## 核心组件
+- 蓝牙管理器: [BluetoothActivity.java](mdc:app/src/main/java/com/gdet/testapp/bluetooth/BluetoothActivity.java)
+- 设备列表: [BluetoothDevicesActivity.kt](mdc:app/src/main/java/com/gdet/testapp/bluetooth/BluetoothDevicesActivity.kt)
+- 车载蓝牙: [CarBluetoothCallManager.kt](mdc:app/src/main/java/com/gdet/testapp/bluetooth/car/CarBluetoothCallManager.kt)
+
+## 蓝牙配置文件
+项目包含多个蓝牙配置文件实现:
+- A2DP音频: [A2dpProfile.java](mdc:app/src/main/java/com/android/settingslib/bluetooth/A2dpProfile.java)
+- A2DP Sink: [A2dpSinkProfile.java](mdc:app/src/main/java/com/android/settingslib/bluetooth/A2dpSinkProfile.java)
+- HID设备: [HidDeviceProfile.java](mdc:app/src/main/java/com/android/settingslib/bluetooth/HidDeviceProfile.java)
+- HFP免提: [HeadsetProfile.java](mdc:app/src/main/java/com/android/settingslib/bluetooth/HeadsetProfile.java)
+
+## 设备管理
+- 设备信息: [BluetoothDeviceInfo.kt](mdc:app/src/main/java/com/gdet/testapp/bluetooth/car/BluetoothDeviceInfo.kt)
+- 事件分发: [BluetoothEventDispatcher.kt](mdc:app/src/main/java/com/gdet/testapp/bluetooth/car/BluetoothEventDispatcher.kt)
+- 设备过滤: [BluetoothDeviceFilter.java](mdc:app/src/main/java/com/android/settingslib/bluetooth/BluetoothDeviceFilter.java)
+
+## 开发规范
+1. **权限管理**: 确保在AndroidManifest.xml中声明蓝牙权限
+2. **生命周期**: 正确注册和注销蓝牙广播接收器
+3. **错误处理**: 处理蓝牙未开启、设备不支持等情况
+4. **用户体验**: 提供连接状态反馈和错误提示
+
+## 实用工具
+- 广播工具: [BluetoothBroadcastUtils.java](mdc:app/src/main/java/com/android/settingslib/bluetooth/BluetoothBroadcastUtils.java)
+- 回调管理: [BluetoothCallback.java](mdc:app/src/main/java/com/android/settingslib/bluetooth/BluetoothCallback.java)
+
+## 测试建议
+- 在多种设备上测试兼容性
+- 测试连接、断开、重连场景
+- 验证音频质量和延迟
+- 测试并发连接处理

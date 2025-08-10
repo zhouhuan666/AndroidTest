@@ -35,6 +35,8 @@ import com.gdet.testapp.rxjava.RxjavaActivity;
 import com.gdet.testapp.touchevent.TouchEventActivity;
 import com.gdet.testapp.view.ViewActivity;
 import com.gdet.testapp.widget.MainRecyclerViewAdapter;
+import com.gdet.testapp.hilt.presentation.HiltDemoActivity;
+import com.gdet.testapp.jni.JniTestActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         put(16, BluetoothActivity.class);
         put(17, CounterActivity.class);
         put(18, UserListActivity.class);
+        put(19, HiltDemoActivity.class);
+        put(20, JniTestActivity.class);
     }};
 
     @Override
@@ -165,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 "Coroutine-OKHttp", "CustomCtrlResOne", "Retrofit", "Lifecycle",
                 "LiveData", "FragmentTest", "ComposeActivity", "GroupActivity",
                 "CoilActivity","ViewActivity","IndexBarActivity","ContactIndexActivity","BluetoothActivity",
-                "MVI计数器示例", "MVI用户列表示例"
+                "MVI计数器示例", "MVI用户列表示例", "Hilt依赖注入示例", "JNI测试示例"
         ));
     }
 

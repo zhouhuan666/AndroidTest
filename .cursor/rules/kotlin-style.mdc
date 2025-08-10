@@ -1,0 +1,38 @@
+---
+globs: *.kt
+description: Kotlin代码风格和最佳实践
+---
+
+# Kotlin代码风格指南
+
+## 命名规范
+- 类名使用PascalCase: `BluetoothDeviceInfo`
+- 函数和变量使用camelCase: `connectToDevice()`, `deviceName`
+- 常量使用UPPER_SNAKE_CASE: `MAX_RETRY_COUNT`
+- 包名使用小写: `com.gdet.testapp.bluetooth`
+
+## 函数定义
+- 优先使用表达式函数体: `fun isConnected() = device.isConnected`
+- 使用数据类表示简单的数据持有者
+- 利用扩展函数增强可读性
+
+## 空安全
+- 优先使用非空类型
+- 适当使用安全调用操作符(?.)和Elvis操作符(?:)
+- 避免使用!!操作符，除非确定不为空
+
+## 协程使用
+- 使用viewModelScope和lifecycleScope管理协程
+- 正确处理协程异常
+- 使用适当的Dispatcher: Main, IO, Default
+
+## 示例参考
+参考项目中的实现:
+- 数据类: [BluetoothDeviceInfo.kt](mdc:app/src/main/java/com/gdet/testapp/bluetooth/car/BluetoothDeviceInfo.kt)
+- 协程使用: [app/src/main/java/com/gdet/testapp/kotlin/coroutine/](mdc:app/src/main/java/com/gdet/testapp/kotlin/coroutine/)
+- LiveData: [app/src/main/java/com/gdet/testapp/jetpack/livedata/](mdc:app/src/main/java/com/gdet/testapp/jetpack/livedata/)
+
+## 集合操作
+- 优先使用Kotlin集合操作符: map, filter, reduce等
+- 使用序列(Sequence)处理大集合以提高性能
+- 适当使用不可变集合

@@ -1,0 +1,55 @@
+---
+description: MVI架构模式实现指南
+---
+
+# MVI架构开发指南
+
+## MVI架构概述
+项目中包含完整的MVI实现示例，位于: [app/src/main/java/com/gdet/testapp/mvi/](mdc:app/src/main/java/com/gdet/testapp/mvi/)
+
+## 核心组件
+
+### Simple MVI实现
+简单版本位于: [app/src/main/java/com/gdet/testapp/mvi/simple/](mdc:app/src/main/java/com/gdet/testapp/mvi/simple/)
+- Intent(意图): 用户操作的抽象表示
+- Model(模型): 应用状态的数据类
+- View(视图): UI状态的渲染
+
+### Complete MVI实现
+完整版本位于: [app/src/main/java/com/gdet/testapp/mvi/complete/](mdc:app/src/main/java/com/gdet/testapp/mvi/complete/)
+包含更复杂的状态管理和副作用处理
+
+## MVI实现原则
+
+### 1. 单向数据流
+```
+User Action → Intent → Processor → State → View Update
+```
+
+### 2. 不可变状态
+- 使用数据类表示状态
+- 每次状态变化创建新实例
+- 避免直接修改状态对象
+
+### 3. 状态统一管理
+- 所有UI状态集中在单一State对象中
+- 通过reduce函数处理状态变化
+- 保证状态的可预测性
+
+### 4. 副作用处理
+- 网络请求、数据库操作等副作用独立处理
+- 使用Effect或Action表示副作用
+- 确保副作用不直接影响UI状态
+
+## Kotlin协程集成
+- 使用StateFlow或LiveData暴露状态
+- 使用Channel处理用户意图
+- 合理使用协程作用域管理生命周期
+
+## 测试策略
+- 状态变化测试: 验证Intent到State的转换
+- UI测试: 验证State到View的渲染
+- 副作用测试: 独立测试业务逻辑
+
+## 参考实现
+查看MVI说明文档: [README.md](mdc:app/src/main/java/com/gdet/testapp/mvi/README.md)

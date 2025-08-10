@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hilt Fragment 示例"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"
+        android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/btnSavePreference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="保存用户偏好设置"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvFragmentInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="这是一个使用Hilt的Fragment示例\n点击按钮保存默认偏好设置" />
+
+</LinearLayout>

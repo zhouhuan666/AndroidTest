@@ -1,0 +1,60 @@
+---
+description: Android Jetpack组件使用指南
+---
+
+# Android Jetpack组件使用指南
+
+## 项目中的Jetpack组件
+项目位置: [app/src/main/java/com/gdet/testapp/jetpack/](mdc:app/src/main/java/com/gdet/testapp/jetpack/)
+
+### Lifecycle组件
+位置: [app/src/main/java/com/gdet/testapp/jetpack/lifecycle/](mdc:app/src/main/java/com/gdet/testapp/jetpack/lifecycle/)
+- 生命周期感知组件
+- 自动管理组件生命周期
+- 避免内存泄漏
+
+### LiveData
+位置: [app/src/main/java/com/gdet/testapp/jetpack/livedata/](mdc:app/src/main/java/com/gdet/testapp/jetpack/livedata/)
+- 生命周期感知的数据持有者
+- 自动处理订阅/取消订阅
+- UI层数据绑定
+
+### ViewModel
+位置: [app/src/main/java/com/gdet/testapp/jetpack/viewmodel/](mdc:app/src/main/java/com/gdet/testapp/jetpack/viewmodel/)
+- 管理UI相关数据
+- 配置变化时保持数据
+- 业务逻辑与UI分离
+
+## 使用最佳实践
+
+### ViewModel + LiveData模式
+```kotlin
+class MyViewModel : ViewModel() {
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
+    
+    // 业务逻辑处理
+}
+```
+
+### 生命周期管理
+- 使用viewModelScope管理协程
+- 使用lifecycleScope在UI组件中启动协程
+- 利用Lifecycle.Event处理特定生命周期事件
+
+### 数据绑定集成
+- 结合DataBinding使用LiveData
+- 在XML中直接绑定ViewModel
+- 减少样板代码
+
+## Kotlin协程集成
+参考协程示例: [app/src/main/java/com/gdet/testapp/kotlin/coroutine/](mdc:app/src/main/java/com/gdet/testapp/kotlin/coroutine/)
+- 使用StateFlow替代LiveData(推荐)
+- 合理选择Dispatcher
+- 正确处理异常和取消
+
+## 架构建议
+- MVVM: Model-View-ViewModel
+- Repository模式: 数据层抽象
+- 依赖注入: 使用Hilt或Manual DI
+- 单一数据源原则

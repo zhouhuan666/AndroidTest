@@ -1,0 +1,39 @@
+---
+globs: *.java,*.kt,*.xml
+description: Android开发规范和最佳实践
+---
+
+# Android开发规范
+
+## 命名规约
+- Activity类名以"Activity"结尾
+- Fragment类名以"Fragment"结尾
+- Adapter类名以"Adapter"结尾
+- 布局文件使用下划线命名: `activity_main.xml`, `fragment_product.xml`
+- 资源ID使用下划线命名: `btn_submit`, `tv_title`
+
+## 包结构规范
+- 按功能模块组织包结构，如: `bluetooth/`, `jetpack/`, `mvi/`
+- 每个功能模块内按类型组织: `model/`, `ui/`, `viewmodel/`
+
+## Android组件规范
+- 优先使用Kotlin协程而非AsyncTask
+- 使用ViewModel + LiveData/StateFlow进行数据管理
+- 遵循MVVM或MVI架构模式
+- 使用数据绑定减少findViewById调用
+
+## 资源管理
+- 字符串资源统一在strings.xml中定义
+- 颜色资源统一在colors.xml中定义
+- 尺寸资源统一在dimens.xml中定义
+- 样式资源统一在styles.xml中定义
+
+## 权限管理
+- 在AndroidManifest.xml中声明必要权限
+- 使用运行时权限请求敏感权限
+- 遵循最小权限原则
+
+## 生命周期管理
+- 正确处理Activity和Fragment生命周期
+- 在onDestroy中释放资源
+- 使用Lifecycle-aware组件
