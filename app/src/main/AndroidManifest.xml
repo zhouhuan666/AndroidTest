@@ -14,6 +14,11 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    
+    <!-- OpenCV图像处理所需权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".AndroidTestApplication"
@@ -124,6 +129,19 @@
             android:label="JNI测试示例"
             android:theme="@style/Theme.TestApp.NoActionBar">
 
+        </activity>
+
+        <!-- OpenCV图像处理演示Activity -->
+        <activity android:name=".opencv.OpenCVDemoActivity"
+            android:label="OpenCV图像处理演示"
+            android:theme="@style/Theme.TestApp.NoActionBar">
+
+        </activity>
+
+        <!-- SOME/IP演示Activity -->
+        <activity android:name=".someip.demo.SomeIpDemoActivity"
+            android:exported="true"
+            android:label="SOME/IP演示">
         </activity>
 
         <service

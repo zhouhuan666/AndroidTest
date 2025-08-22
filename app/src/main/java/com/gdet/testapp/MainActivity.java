@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +39,8 @@ import com.gdet.testapp.view.ViewActivity;
 import com.gdet.testapp.widget.MainRecyclerViewAdapter;
 import com.gdet.testapp.hilt.presentation.HiltDemoActivity;
 import com.gdet.testapp.jni.JniTestActivity;
+import com.gdet.testapp.opencv.OpenCVDemoActivity;
+import com.gdet.testapp.opencv.OpenCVHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         put(18, UserListActivity.class);
         put(19, HiltDemoActivity.class);
         put(20, JniTestActivity.class);
+        put(21, OpenCVDemoActivity.class);
+        put(22, com.gdet.testapp.someip.demo.SomeIpDemoActivity.class);
     }};
 
     @Override
@@ -96,6 +102,20 @@ public class MainActivity extends AppCompatActivity {
         requestBluetoothPermissions();
     }
 
+    // 在onCreate方法中添加SOME/IP演示按钮
+    private void addSomeIpDemoButton(LinearLayout layout) {
+        Button someIpDemoButton = new Button(this);
+        someIpDemoButton.setText("SOME/IP演示");
+        someIpDemoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, 
+                    com.gdet.testapp.someip.demo.SomeIpDemoActivity.class);
+                startActivity(intent);
+            }
+        });
+        layout.addView(someIpDemoButton);
+    }
 
     // 检查并请求蓝牙权限
     private void requestBluetoothPermissions() {
@@ -169,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 "Coroutine-OKHttp", "CustomCtrlResOne", "Retrofit", "Lifecycle",
                 "LiveData", "FragmentTest", "ComposeActivity", "GroupActivity",
                 "CoilActivity","ViewActivity","IndexBarActivity","ContactIndexActivity","BluetoothActivity",
-                "MVI计数器示例", "MVI用户列表示例", "Hilt依赖注入示例", "JNI测试示例"
+                "MVI计数器示例", "MVI用户列表示例", "Hilt依赖注入示例", "JNI测试示例", "OpenCV图像处理演示", "SOME/IP演示"
         ));
     }
 
@@ -182,7 +202,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onItemClick: position " + ((Button)view).getText() + position);
             Class<?> targetActivity = activityMap.get(position);
             if(targetActivity != null) {
-                startActivity(new Intent(MainActivity.this, targetActivity));
+                // 特殊处理OpenCV演示Activity
+                if(targetActivity == OpenCVDemoActivity.class) {
+                    handleOpenCVDemo();
+                } else {
+                    startActivity(new Intent(MainActivity.this, targetActivity));
+                }
             }
         });
 
@@ -195,6 +220,97 @@ public class MainActivity extends AppCompatActivity {
             list.add("asdfsadfsadfasdfasdf");
             adapter.notifyDataSetChanged();
         });
+    }
+
+    /**
+     * 处理OpenCV演示Activity的启动
+     * 检查OpenCV库是否可用，并给出相应的提示
+     */
+    private void handleOpenCVDemo() {
+        try {
+            // 检查OpenCV是否可用
+            if (OpenCVHelper.isOpenCVAvailable()) {
+                // OpenCV可用，直接启动演示Activity
+                Intent intent = new Intent(this, OpenCVDemoActivity.class);
+                startActivity(intent);
+                Log.i(TAG, "启动OpenCV演示Activity - OpenCV库已加载");
+            } else {
+                // OpenCV不可用，显示提示信息
+                showOpenCVUnavailableDialog();
+                Log.w(TAG, "OpenCV库未加载，显示配置提示");
+            }
+        } catch (Exception e) {
+            // 处理可能的异常
+            Log.e(TAG, "启动OpenCV演示时发生错误: " + e.getMessage(), e);
+            showOpenCVErrorDialog(e.getMessage());
+        }
+    }
+
+    /**
+     * 显示OpenCV不可用的对话框
+     */
+    private void showOpenCVUnavailableDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("OpenCV功能不可用")
+                .setMessage("OpenCV库尚未配置或加载失败。\n\n" +
+                           "要启用OpenCV功能，请按以下步骤操作：\n" +
+                           "1. 下载OpenCV Android SDK\n" +
+                           "2. 解压到项目的libs/opencv/目录\n" +
+                           "3. 重新编译项目\n\n" +
+                           "详细说明请参考OPENCV_SETUP_GUIDE.md文件。\n\n" +
+                           "是否仍要查看演示界面？（功能将不可用）")
+                .setPositiveButton("查看演示界面", (dialog, which) -> {
+                    // 仍然启动Activity，但功能不可用
+                    Intent intent = new Intent(this, OpenCVDemoActivity.class);
+                    startActivity(intent);
+                })
+                .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
+                .setNeutralButton("查看配置说明", (dialog, which) -> {
+                    // 这里可以打开配置说明，或者显示更详细的帮助信息
+                    showOpenCVSetupHelp();
+                })
+                .show();
+    }
+
+    /**
+     * 显示OpenCV错误对话框
+     */
+    private void showOpenCVErrorDialog(String errorMessage) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("OpenCV启动错误")
+                .setMessage("启动OpenCV演示时发生错误：\n\n" + errorMessage + 
+                           "\n\n请检查OpenCV库的配置和安装。")
+                .setPositiveButton("确定", (dialog, which) -> dialog.dismiss())
+                .setNeutralButton("查看帮助", (dialog, which) -> showOpenCVSetupHelp())
+                .show();
+    }
+
+    /**
+     * 显示OpenCV配置帮助信息
+     */
+    private void showOpenCVSetupHelp() {
+        String helpMessage = "OpenCV Android集成配置步骤：\n\n" +
+                            "📦 快速开始（当前状态）\n" +
+                            "• 项目可正常运行，但OpenCV功能不可用\n" +
+                            "• 这是正常的，OpenCV为可选功能\n\n" +
+                            "🔧 完整OpenCV集成\n" +
+                            "1. 下载OpenCV Android SDK\n" +
+                            "   https://opencv.org/releases/\n\n" +
+                            "2. 解压到项目目录\n" +
+                            "   AndroidTest/libs/opencv/\n\n" +
+                            "3. 重新编译项目\n" +
+                            "   ./gradlew clean && ./gradlew assembleDebug\n\n" +
+                            "📱 验证安装\n" +
+                            "• 编译日志显示\"OpenCV found and enabled!\"\n" +
+                            "• 本演示界面所有功能可正常使用\n\n" +
+                            "📖 详细说明请查看项目根目录的\n" +
+                            "OPENCV_SETUP_GUIDE.md文件";
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("OpenCV配置帮助")
+                .setMessage(helpMessage)
+                .setPositiveButton("我知道了", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }
 

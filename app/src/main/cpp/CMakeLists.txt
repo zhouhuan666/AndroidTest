@@ -1,17 +1,49 @@
-# CMakeLists.txt - CMake构建脚本
+# CMakeLists.txt - CMake构建脚本（支持OpenCV集成）
 # CMake是跨平台的构建工具，用于编译C/C++代码
 
 # 设置CMake最低版本要求
 cmake_minimum_required(VERSION 3.22.1)
 
 # 声明项目名称
-project("native-lib")
+project("opencv-integration")
 
-# 添加库定义
-# add_library() 用于创建一个库
-# SHARED 表示创建动态链接库（.so文件）
-# native-lib 是库的名称，最终生成 libnative-lib.so
-# native-lib.cpp 是源文件
+# =================================================================
+# OpenCV集成配置 - 可选功能
+# =================================================================
+
+# 检查OpenCV是否可用
+option(ENABLE_OPENCV "Enable OpenCV integration" OFF)
+
+# 如果用户明确启用OpenCV，或者存在OpenCV目录，则尝试查找
+if(ENABLE_OPENCV OR EXISTS "${CMAKE_SOURCE_DIR}/../../../libs/opencv")
+    # 设置OpenCV路径
+    set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/../../../libs/opencv/sdk/native/jni)
+    
+    # 尝试查找OpenCV包（不是必需的）
+    find_package(OpenCV QUIET)
+    
+    if(OpenCV_FOUND)
+        message(STATUS "OpenCV found and enabled!")
+        message(STATUS "    version: ${OpenCV_VERSION}")
+        message(STATUS "    libraries: ${OpenCV_LIBS}")
+        message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
+        set(OPENCV_AVAILABLE TRUE)
+    else()
+        message(WARNING "OpenCV requested but not found. OpenCV features will be disabled.")
+        message(STATUS "To enable OpenCV:")
+        message(STATUS "  1. Download OpenCV Android SDK from https://opencv.org/releases/")
+        message(STATUS "  2. Extract to: ${CMAKE_SOURCE_DIR}/../../../libs/opencv/")
+        message(STATUS "  3. Set ENABLE_OPENCV=ON or ensure the directory exists")
+        set(OPENCV_AVAILABLE FALSE)
+    endif()
+else()
+    message(STATUS "OpenCV integration disabled. To enable:")
+    message(STATUS "  - Set ENABLE_OPENCV=ON, or")
+    message(STATUS "  - Install OpenCV Android SDK to: ${CMAKE_SOURCE_DIR}/../../../libs/opencv/")
+    set(OPENCV_AVAILABLE FALSE)
+endif()
+
+# 添加原有的JNI库
 add_library(
         # 库名称 - 对应Java中System.loadLibrary("native-lib")
         native-lib
@@ -19,31 +51,69 @@ add_library(
         # 库类型 - SHARED表示动态库，STATIC表示静态库
         SHARED
 
-        # 源文件列表 - 可以添加多个.cpp文件
+        # 源文件列表 - 原有的JNI示例
         native-lib.cpp
 )
 
-# 查找并链接Android NDK提供的库
-# find_library() 用于查找系统预编译的库
-find_library(
-        # 变量名，用于存储库的路径
-        log-lib
+# 查找Android NDK提供的库
+find_library(log-lib log)              # Android日志库
 
-        # 要查找的库名称（不包含lib前缀和.so后缀）
-        # log库提供Android日志功能(__android_log_print等函数)
-        log
+# 添加16KB页面大小对齐的链接器选项
+# 这是为了支持Google Play从2025年11月1日开始要求的16KB页面大小
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=0x4000")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,common-page-size=0x4000")
+
+# 为native-lib库设置16KB页面对齐（使用target-specific属性）
+set_target_properties(native-lib PROPERTIES
+    LINK_FLAGS "-Wl,-z,max-page-size=0x4000 -Wl,-z,common-page-size=0x4000"
 )
 
-# 链接库
-# target_link_libraries() 将找到的库链接到我们的库
+# 链接原有的JNI库
 target_link_libraries(
-        # 目标库（我们创建的库）
         native-lib
-
-        # 要链接的库列表
-        # ${log-lib} 引用上面find_library找到的log库
         ${log-lib}
 )
+
+# =================================================================
+# OpenCV相关库配置 - 仅在OpenCV可用时编译
+# =================================================================
+
+if(OPENCV_AVAILABLE)
+    # 查找额外的Android库
+    find_library(jnigraphics-lib jnigraphics)  # Bitmap处理库
+    find_library(android-lib android)          # Android系统库
+    
+    # 添加OpenCV JNI库
+    add_library(
+            # OpenCV JNI库名称
+            opencv-jni
+            # 库类型
+            SHARED
+            # OpenCV相关的源文件
+            opencv-jni.cpp
+    )
+    
+    # 包含OpenCV头文件目录
+    target_include_directories(opencv-jni PRIVATE ${OpenCV_INCLUDE_DIRS})
+    
+    # 为OpenCV JNI库设置16KB页面对齐（使用target-specific属性）
+    set_target_properties(opencv-jni PROPERTIES
+        LINK_FLAGS "-Wl,-z,max-page-size=0x4000 -Wl,-z,common-page-size=0x4000"
+    )
+    
+    # 链接OpenCV JNI库
+    target_link_libraries(
+            opencv-jni
+            ${OpenCV_LIBS}          # OpenCV库
+            ${log-lib}              # Android日志库
+            ${jnigraphics-lib}      # 用于Bitmap和Mat转换
+            ${android-lib}          # Android系统库
+    )
+    
+    message(STATUS "OpenCV JNI library configured successfully")
+else()
+    message(STATUS "OpenCV JNI library skipped (OpenCV not available)")
+endif()
 
 # 其他常用的Android NDK库：
 # android - 提供Android特定的API

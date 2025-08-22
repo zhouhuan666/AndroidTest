@@ -30,6 +30,10 @@ android {
             cmake {
                 // C++编译参数
                 cppFlags "-std=c++17"
+                // 添加16KB页面大小支持的链接器参数
+                // 这是为了符合Google Play从2025年11月1日开始的要求
+                arguments "-DANDROID_LD=lld", 
+                          "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=0x4000 -Wl,-z,common-page-size=0x4000"
                 // 其他编译参数可以在这里添加
                 // arguments "-DANDROID_STL=c++_shared"
             }
@@ -91,6 +95,11 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
+    }
+    
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     
     // 外部本地构建配置 - 告诉Gradle如何构建C++代码
@@ -332,6 +341,12 @@ dependencies {
 
 
     debugImplementation("androidx.compose.ui:ui-tooling")
+
+    // Gson用于JSON序列化
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
+    // OkHttp用于HTTP通信（如果需要）
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
 
 // 添加这个配置来处理隐藏 API 的访问

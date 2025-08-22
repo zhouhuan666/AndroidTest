@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context="com.gdet.testapp.someip.demo.SomeIpDemoActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SOME/IP 车载通信演示"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"
+            android:textColor="@android:color/black" />
+
+        <!-- 状态显示区域 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="状态: 未初始化"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/tv_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="温度: --°C"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/tv_fan_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="风速: --"
+                android:textSize="16sp"
+                android:textColor="@android:color/black" />
+
+        </LinearLayout>
+
+        <!-- 服务控制按钮区域 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="服务控制"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btn_start_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="启动HVAC服务"
+            android:layout_marginBottom="8dp"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <Button
+            android:id="@+id/btn_stop_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="停止HVAC服务"
+            android:layout_marginBottom="16dp"
+            android:enabled="false"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <!-- 客户端功能按钮区域 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="客户端功能"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btn_discover_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="发现HVAC服务"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_get_temperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取温度"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_set_temperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置温度为25°C"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_get_fan_speed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取风速"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_set_fan_speed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置风速为5"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_subscribe_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="订阅HVAC事件"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 说明文本 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="使用说明：\n1. 先启动HVAC服务\n2. 发现服务后可调用方法\n3. 订阅事件后可接收实时通知"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:background="@drawable/bg_info"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+</ScrollView> 
